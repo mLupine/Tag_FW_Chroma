@@ -154,8 +154,8 @@ build_variant() {
 
     make clean BUILD="${BUILD_NAME}" > /dev/null 2>&1 || true
 
-    if make BUILD="${BUILD_NAME}"; then
-        echo -e "${GREEN}✓ ${BUILD_NAME} built successfully${NC}"
+    if make release BUILD="${BUILD_NAME}"; then
+        echo -e "${GREEN}✓ ${BUILD_NAME} built successfully (full + OTA)${NC}"
         return 0
     else
         echo -e "${RED}✗ ${BUILD_NAME} build failed${NC}"
@@ -173,12 +173,16 @@ build_summary() {
     local TOTAL=${#BUILDS[@]}
     local SUCCESS=0
     local FAILED=0
+    local PREBUILT_DIR="../../OpenEPaperLink/binaries/Tag"
 
     for BUILD in "${BUILDS[@]}"; do
-        local BUILD_DIR="builds/${BUILD}"
-        if [ -d "$BUILD_DIR" ] && [ -f "$BUILD_DIR/main.bin" ]; then
-            local SIZE=$(stat -f%z "$BUILD_DIR/main.bin" 2>/dev/null || stat -c%s "$BUILD_DIR/main.bin" 2>/dev/null || echo "?")
-            echo -e "${GREEN}✓${NC} ${BUILD}: ${SIZE} bytes"
+        local FULL_BIN=$(find "$PREBUILT_DIR" -name "${BUILD}_full_*.bin" -type f 2>/dev/null | head -1)
+        local OTA_BIN=$(find "$PREBUILT_DIR" -name "${BUILD}_ota_*.bin" -type f 2>/dev/null | head -1)
+
+        if [ -n "$FULL_BIN" ] && [ -n "$OTA_BIN" ]; then
+            local FULL_SIZE=$(stat -f%z "$FULL_BIN" 2>/dev/null || stat -c%s "$FULL_BIN" 2>/dev/null || echo "?")
+            local OTA_SIZE=$(stat -f%z "$OTA_BIN" 2>/dev/null || stat -c%s "$OTA_BIN" 2>/dev/null || echo "?")
+            echo -e "${GREEN}✓${NC} ${BUILD}: full=${FULL_SIZE}B, ota=${OTA_SIZE}B"
             SUCCESS=$((SUCCESS + 1))
         else
             echo -e "${RED}✗${NC} ${BUILD}: Build failed or output missing"
@@ -193,7 +197,8 @@ build_summary() {
         echo -e "${GREEN}All builds completed successfully!${NC}"
         echo
         echo "Binary files are located in:"
-        echo "  $(pwd)/builds/<variant>/main.bin"
+        echo "  Full images: $(cd "$PREBUILT_DIR" 2>/dev/null && pwd || echo "$PREBUILT_DIR")/*_full_*.bin"
+        echo "  OTA images:  $(cd "$PREBUILT_DIR" 2>/dev/null && pwd || echo "$PREBUILT_DIR")/*_ota_*.bin"
         return 0
     else
         echo -e "${RED}Some builds failed. Check the output above for details.${NC}"

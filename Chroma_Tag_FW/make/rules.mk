@@ -38,7 +38,7 @@ $(PREBUILT_DIR)/$(OTA_IMAGE_NAME).bin: $(PREBUILT_DIR)/$(IMAGE_NAME).bin
 
 
 $(BUILD_DIR)/$(IMAGE_NAME).bin: $(BUILD_DIR)/main.ihx
-	objcopy $< $@ -I ihex -O binary
+	sdobjcopy $< $@ -I ihex -O binary
 	@# Display sizes, we're critically short for code and RAM space !
 	@grep '^Area' $(BUILD_DIR)/main.map | head -1
 	@echo '--------------------------------        ----        ----        ------- ----- ------------'

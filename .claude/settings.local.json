@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(episodic-memory:remembering-conversations)",
+      "mcp__plugin_episodic-memory_episodic-memory__search"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
