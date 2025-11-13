@@ -30,12 +30,39 @@ Where \<version\> is the 4 digit firmware version in hex for example "chroma29_8
 
 Binaries are available here:  https://github.com/OpenEPaperLink/OpenEPaperLink/tree/master/binaries/Tag
 
-Refer the table above for the correct filename. 
- 
+Refer the table above for the correct filename.
+
 ## Building from Source
- 
-**NB:** While it may be possible to use Windows for development I haven't 
-tried it and don't recommend it. 
+
+### Quick Start: Build All Variants (macOS/Linux)
+
+The easiest way to build all firmware variants is to use the provided build script:
+
+```bash
+./build_all.sh
+```
+
+The script will:
+- Check for SDCC 4.2.0 (or offer to install it)
+- Build all supported tag variants
+- Display a summary of successful builds
+
+**On macOS**: The script will offer to install SDCC via Homebrew if not present.
+
+**On Linux**: If SDCC is not installed, the script can build it locally from source.
+
+Binary files will be created in `Chroma_Tag_FW/builds/<variant>/main.bin`
+
+Options:
+```bash
+./build_all.sh --help    # Show help
+./build_all.sh --clean   # Clean build directories
+```
+
+### Manual Build Process
+
+**NB:** While it may be possible to use Windows for development I haven't
+tried it and don't recommend it.
 
 Executive summary;
 
