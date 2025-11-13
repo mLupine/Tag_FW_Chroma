@@ -181,13 +181,8 @@ void TagAssociated()
    }
    else {
       if(nextCheckInFromAP) {
-      // if the AP told us to sleep for a specific period, do so.
-         if(nextCheckInFromAP & 0x8000) {
-            doSleep((nextCheckInFromAP & 0x7FFF) * 1000UL);
-         }
-         else {
-            doSleep(nextCheckInFromAP * 60000UL);
-         }
+      // if the AP told us to sleep for a specific period, do so. Value is in seconds.
+         doSleep(nextCheckInFromAP * 1000UL);
       }
       else {
       // sleep determined by algorithm
